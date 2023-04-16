@@ -57,6 +57,68 @@ export const constantRoutes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: "/scholarship",
+    component: Layout,
+    redirect: "/scholarship/application",
+    name: "scholarship",
+    meta: {
+      title: "奖学金管理",
+    },
+    children: [
+      {
+        path: "application",
+        component: () => import("@/views/scholarship/application/index.vue"),
+        redirect: "/scholarship/application/comprehensive-scholarship",
+        name: "application",
+        meta: {
+          title: "奖学金申请"
+        },
+        children: [
+          {
+            path: "comprehensive-scholarship",
+            component: () => import("@/views/scholarship/application/comprehensive-scholarship/index.vue"),
+            name: "comprehensive-scholarship",
+            meta: {
+              title: "综合奖学金"
+            }
+          },
+          {
+            path: "other-scholarship",
+            component: () => import("@/views/scholarship/application/other-scholarship/index.vue"),
+            name: "other-scholarship",
+            meta: {
+              title: "其他奖学金"
+            }
+          }
+        ]
+      },
+      {
+        path: "status",
+        component: () => import("@/views/scholarship/status/index.vue"),
+        name: "status",
+        meta: {
+          title: "状态查询"
+        }
+      }
+    ]
+  },
+  {
+    path: "/projects",
+    component: Layout,
+    redirect: "/projects/index",
+    children: [
+      {
+        path: "index",
+        component: () => import("@/views/projects/index.vue"),
+        name: "projects",
+        meta: {
+          title: "项目管理",
+          svgIcon: "unocss"
+        }
+      }
+    ]
+  },
+  {
     path: "/unocss",
     component: Layout,
     redirect: "/unocss/index",
