@@ -11,13 +11,15 @@ initTheme()
 /** 将 Element Plus 的语言设置为中文 */
 const locale = zhCn
 
+
 ElNotification({
-  title: "Hello",
+  title: "欢迎登陆研究生管理系统！",
   message: h(
     "a",
-    { style: "color: teal", target: "_blank", href: "https://github.com/un-pany/v3-admin-vite" },
-    "小项目获取 star 不易，如果你喜欢这个项目的话，欢迎点击这里支持一个 star ！这是作者持续维护的唯一动力（小声：毕竟是免费的）"
+    {target: "_blank" },
+    ""
   ),
+  type: "success",
   duration: 0,
   position: "bottom-right"
 })
@@ -28,3 +30,5 @@ ElNotification({
     <router-view />
   </ElConfigProvider>
 </template>
+
+
