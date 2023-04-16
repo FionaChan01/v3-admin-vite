@@ -11,19 +11,13 @@ initTheme()
 /** 将 Element Plus 的语言设置为中文 */
 const locale = zhCn
 
-
 ElNotification({
-  title: "欢迎登陆研究生管理系统！",
-  message: h(
-    "a",
-    {target: "_blank" },
-    ""
-  ),
+  title: "欢迎登陆研究生信息化管理系统！",
+  message: h("a", { target: "_blank" }, ""),
   type: "success",
   duration: 0,
   position: "bottom-right"
 })
-
 </script>
 
 <template>
@@ -31,5 +25,3 @@ ElNotification({
     <router-view />
   </ElConfigProvider>
 </template>
-
-
