@@ -11,7 +11,7 @@
         <el-col :span="24">
           <h3>1. 基础信息</h3>
           <div class="indent">
-            <el-descriptions direction="vertical" :column="2" :size="size" border>
+            <el-descriptions direction="vertical" :column="2" size="small" border>
               <el-descriptions-item label="总绩点">3.73</el-descriptions-item>
               <el-descriptions-item label="上学期绩点">4.00</el-descriptions-item>
               <el-descriptions-item label="总排名">36</el-descriptions-item>
@@ -25,7 +25,7 @@
         <el-col :span="24">
           <h3>2. 综合测评细则</h3>
           <div class="indent">
-            <el-collapse v-model="activeNames" @change="handleChange">
+            <el-collapse v-model="activeNames">
               <el-collapse-item title="2022-2023春季" name="1">
                 <div class="container">
                   <h1>计算机学院2019级研一上综合测评细则</h1>
@@ -103,7 +103,7 @@
           </div>
           <div class="indent">
             <h5>i. 德育奖励分 --> c. 荣誉加分（同一集体或个人获同一类型各级别荣誉称号按最高加分计分1次）</h5>
-            <el-checkbox-group class="indent2" v-model="checkList">
+            <el-checkbox-group class="indent2" v-model="checkList3">
               <div style="display: block">
                 <el-checkbox
                   v-model="activity6"
@@ -112,11 +112,12 @@
               </div>
               <div style="display: block">
                 <el-checkbox
+                  @change="test"
                   v-model="activity7"
                   label="重庆大学先进班集体、重庆大学优秀团日活动（校级：班长团支书：4分，其他成员：2分；校级：班长团支书：2分，其他成员：1分）"
                 />
                 <!--TODO:无法勾选checkbox后显示下一个计分框-->
-                <el-form v-if="activity7" class="indent3" label-position="left" label-width="70px">
+                <el-form v-show="activity7 == 1" class="indent3" label-position="left" label-width="70px">
                   <el-form-item label="计分">
                     <el-input-number v-model="HonorBonus1" :min="0" />
                   </el-form-item>
@@ -135,7 +136,7 @@
               i. 德育奖励分 --> d. 社会工作加分
               (学生干部兼任多个职务者，只计2项，其中最高的职务全额加分，第2项折半加分，其余职务不予加分)
             </h5>
-            <el-checkbox-group max="2" class="indent2" v-model="checkList">
+            <el-checkbox-group :max="2" class="indent2" v-model="checkList2">
               <div style="display: block">
                 <el-checkbox v-model="social1" label="校、院学生会主席团成员（5）" />
               </div>
@@ -163,21 +164,22 @@
   >
 </template>
 
-<script>
+<script lang="ts">
 export default {
   data() {
     return {
-      size: "small",
       activeNames: ["1"],
       selfSummary: "",
       checkList: [],
+      checkList2: [],
+      checkList3: [],
       activity1: false,
       activity2: false,
       activity3: false,
       activity4: false,
       activity5: false,
       activity6: false,
-      activity7: false,
+      activity7: 0,
       activity8: false,
       intellectualScore: 0,
       moralBaseScore: 0,
@@ -199,24 +201,10 @@ export default {
     }
   },
   methods: {
-    toggleInput(index) {
-      this.$set(this.showInput, index, !this.showInput[index])
-    },
-    handleChange(val) {
-      console.log(val)
+    test() {
+      console.log(this.activity7)
+      console.log(this.checkList3)
     }
   }
 }
 </script>
-
-<style>
-.indent {
-  padding-left: 20px !important;
-}
-.indent2 {
-  padding-left: 40px !important;
-}
-.indent3 {
-  padding-left: 60px !important;
-}
-</style>

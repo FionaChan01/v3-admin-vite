@@ -63,6 +63,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     name: "scholarship",
     meta: {
       title: "奖学金管理",
+      svgIcon: "menu"
     },
     children: [
       {

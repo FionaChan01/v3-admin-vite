@@ -5,7 +5,7 @@
         <el-avatar shape="square" :size="250" :src="squareUrl" />
       </el-aside>
       <el-main>
-        <el-descriptions title="1. 基本信息" direction="vertical" :column="4" :size="size" border>
+        <el-descriptions title="1. 基本信息" direction="vertical" :column="4" size="small" border>
           <el-descriptions-item label="姓名">陈芊辰</el-descriptions-item>
           <el-descriptions-item label="性别">女</el-descriptions-item>
           <el-descriptions-item label="民族">汉</el-descriptions-item>
@@ -20,7 +20,7 @@
           <el-descriptions-item label="证件号码" :span="3">500000200100000000</el-descriptions-item>
         </el-descriptions>
         <el-divider border-style="double" />
-        <el-descriptions title="2. 研究生学业信息" direction="vertical" :column="4" :size="size" border>
+        <el-descriptions title="2. 研究生学业信息" direction="vertical" :column="4" size="small" border>
           <el-descriptions-item label="学院">计算机学院</el-descriptions-item>
           <el-descriptions-item label="专业">计算机科学与技术</el-descriptions-item>
           <el-descriptions-item label="导师">杨广超</el-descriptions-item>
