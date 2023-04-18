@@ -120,17 +120,33 @@ export const constantRoutes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: "/unocss",
+    path: "/information",
     component: Layout,
-    redirect: "/unocss/index",
+    redirect: "/information/index",
     children: [
       {
         path: "index",
-        component: () => import("@/views/unocss/index.vue"),
-        name: "UnoCSS",
+        component: () => import("@/views/information/index.vue"),
+        name: "infomation",
         meta: {
-          title: "unocss",
-          svgIcon: "unocss"
+          title: "信息发布",
+          svgIcon: "link"
+        }
+      }
+    ]
+  },
+  {
+    path: "/post",
+    component: Layout,
+    redirect: "/post/:postId",
+    children: [
+      {
+        path: "/:postId",
+        component: () => import("@/views/post/index.vue"),
+        name: "BlogPost",
+        props: true,
+        meta: {
+          title: "详情"
         }
       }
     ]
