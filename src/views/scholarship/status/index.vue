@@ -10,18 +10,26 @@
       <el-row>
         <el-col :span="24">
           <h3>1. 综合奖学金</h3>
-          <h4>(1) 评分明细</h4>
+          <h4>(1) 本学期评分明细</h4>
           <el-descriptions direction="vertical" :column="2" border>
             <div v-for="(score, index) in scores" :key="index" style="display: block">
               <el-descriptions-item :label="score.name">{{ score.score }}</el-descriptions-item>
             </div>
           </el-descriptions>
-          <h4>(2) 奖学金结果</h4>
+          <h4>(2) 本学期评选结果</h4>
           <el-descriptions direction="vertical" :column="1" border>
             <el-descriptions-item label="等级">一等奖学金</el-descriptions-item>
           </el-descriptions>
         </el-col>
       </el-row>
+
+      <el-row>
+        <el-col :span="24">
+          <h3>2. 所有奖学金</h3>
+
+        </el-col>
+      </el-row>
+
     </el-main></el-container
   >
 </template>

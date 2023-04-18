@@ -39,6 +39,12 @@
           </el-upload>
         </div>
       </el-row>
+      <br />
+      <el-row>
+        <el-button type="primary">
+          提交申请<el-icon class="el-icon--right"><Upload /></el-icon>
+        </el-button>
+      </el-row>
     </el-main>
   </el-container>
 </template>
