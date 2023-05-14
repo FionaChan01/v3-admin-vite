@@ -5,21 +5,22 @@ import { useUserStore } from "@/store/modules/user"
 import { User, Lock, Key, Picture, Loading } from "@element-plus/icons-vue"
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
 import { type FormInstance, FormRules } from "element-plus"
-import { getLoginCodeApi } from "@/api/login"
 import { type ILoginRequestData } from "@/api/login/types/login"
-
+import { checkCodeApi } from "@/api/login/index"
+import { loginApi } from "@/api/login/index"
+import qs from "qs"
+import { type CheckCodeResponseData } from "@/api/login/types/login"
 const router = useRouter()
 const loginFormRef = ref<FormInstance | null>(null)
-
+const kapcha = ref("http://localhost:8080/login/code")
 /** 登录按钮 Loading */
 const loading = ref(false)
 /** 验证码图片 URL */
-const codeUrl = ref("")
 /** 登录表单数据 */
 const loginForm: ILoginRequestData = reactive({
   username: "admin",
   password: "12345678",
-  code: ""
+  verifyCodeActual: ""
 })
 /** 登录表单校验规则 */
 const loginFormRules: FormRules = {
@@ -28,47 +29,33 @@ const loginFormRules: FormRules = {
     { required: true, message: "请输入密码", trigger: "blur" },
     { min: 8, max: 16, message: "长度在 8 到 16 个字符", trigger: "blur" }
   ],
-  code: [{ required: true, message: "请输入验证码", trigger: "blur" }]
+  verifyCodeActual: [{ required: true, message: "请输入验证码", trigger: "blur" }]
 }
 /** 登录逻辑 */
 const handleLogin = () => {
   loginFormRef.value?.validate((valid: boolean) => {
     if (valid) {
       loading.value = true
-      useUserStore()
-        .login({
-          username: loginForm.username,
-          password: loginForm.password,
-          code: loginForm.code
-        })
-        .then(() => {
-          router.push({ path: "/" })
-        })
-        .catch(() => {
-          createCode()
-          loginForm.password = ""
-        })
-        .finally(() => {
-          loading.value = false
-        })
+      const postData = qs.stringify({
+        username: loginForm.username,
+        password: loginForm.password,
+        verifyCodeActual: loginForm.verifyCodeActual
+      })
+      loginApi(postData).then((res) => {
+        router.push({ path: "/dashboard" })
+      })
     } else {
       return false
     }
   })
 }
 /** 创建验证码 */
-const createCode = () => {
+const refreshCode = () => {
   // 先清空验证码的输入
-  loginForm.code = ""
-  // 获取验证码
-  codeUrl.value = ""
-  getLoginCodeApi().then((res) => {
-    codeUrl.value = res.data
-  })
+  loginForm.verifyCodeActual = ""
+  // 重新获取验证码
+  kapcha.value = "http://localhost:8080/login/code?" + Math.random()
 }
-
-/** 初始化验证码 */
-createCode()
 </script>
 
 <template>
@@ -101,9 +88,9 @@ createCode()
               show-password
             />
           </el-form-item>
-          <el-form-item prop="code">
+          <el-form-item prop="verifyCodeActual">
             <el-input
-              v-model.trim="loginForm.code"
+              v-model.trim="loginForm.verifyCodeActual"
               placeholder="验证码"
               type="text"
               tabindex="3"
@@ -112,7 +99,7 @@ createCode()
               size="large"
             >
               <template #append>
-                <el-image :src="codeUrl" @click="createCode" draggable="false">
+                <el-image :src="kapcha" @click="refreshCode" draggable="false">
                   <template #placeholder>
                     <el-icon><Picture /></el-icon>
                   </template>

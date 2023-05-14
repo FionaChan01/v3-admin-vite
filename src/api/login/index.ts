@@ -12,16 +12,17 @@ export function getLoginCodeApi() {
 /** 登录并返回 Token */
 export function loginApi(data: Login.ILoginRequestData) {
   return request<Login.LoginResponseData>({
-    url: "users/login",
+    url: "login/login",
     method: "post",
     data
   })
 }
 
 /** 获取用户详情 */
-export function getUserInfoApi() {
+export function getRole(data: Login.ITokenData) {
   return request<Login.UserInfoResponseData>({
-    url: "users/info",
-    method: "get"
+    url: "login/role",
+    method: "post",
+    data
   })
 }

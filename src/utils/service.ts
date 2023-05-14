@@ -3,14 +3,21 @@ import { useUserStoreHook } from "@/store/modules/user"
 import { ElMessage } from "element-plus"
 import { get } from "lodash-es"
 import { getToken } from "./cache/cookies"
-
+axios.defaults.withCredentials = true
 /** 创建请求实例 */
 function createService() {
   // 创建一个 Axios 实例
   const service = axios.create()
   // 请求拦截
   service.interceptors.request.use(
-    (config) => config,
+    (config) => {
+      // 在发送请求之前做些什么
+      // add token to the request header
+      if (getToken()) {
+        config.headers["Authorization"] = "Bearer " + getToken()
+      }
+      return config
+    },
     // 发送失败
     (error) => Promise.reject(error)
   )
@@ -27,7 +34,7 @@ function createService() {
         return Promise.reject(new Error("非本系统的接口"))
       } else {
         switch (code) {
-          case 0:
+          case 200:
             // code === 0 代表没有错误
             return apiData
           default:
@@ -37,6 +44,7 @@ function createService() {
         }
       }
     },
+
     (error) => {
       // Status 是 HTTP 状态码
       const status = get(error, "response.status")
@@ -93,7 +101,8 @@ function createRequestFunction(service: AxiosInstance) {
       headers: {
         // 携带 Token
         Authorization: "Bearer " + getToken(),
-        "Content-Type": get(config, "headers.Content-Type", "application/json")
+        "Content-Type": "application/x-www-form-urlencoded",
+        Accept: "application/json"
       },
       timeout: 5000,
       baseURL: import.meta.env.VITE_BASE_API,

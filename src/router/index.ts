@@ -50,7 +50,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         name: "Dashboard",
         meta: {
           title: "首页",
-          svgIcon: "dashboard",
+          svgIcon: "home",
           affix: true
         }
       }
@@ -63,7 +63,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     name: "scholarship",
     meta: {
       title: "奖学金管理",
-      svgIcon: "menu"
+      svgIcon: "scholarship"
     },
     children: [
       {
@@ -104,17 +104,77 @@ export const constantRoutes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: "/projects",
+    path: "/thesis",
     component: Layout,
-    redirect: "/projects/index",
+    redirect: "/thesis/index",
     children: [
       {
         path: "index",
-        component: () => import("@/views/projects/index.vue"),
-        name: "projects",
+        component: () => import("@/views/thesis/index.vue"),
+        name: "thesis",
         meta: {
-          title: "项目管理",
-          svgIcon: "unocss"
+          title: "论文管理",
+          svgIcon: "thesis"
+        }
+      }
+    ]
+  },
+  {
+    path: "/projects",
+    component: Layout,
+    redirect: "/projects/all",
+    name: "projects",
+    meta: {
+      title: "项目管理",
+      svgIcon: "project"
+    },
+    children: [
+      {
+        path: "all",
+        component: () => import("@/views/projects/all/index.vue"),
+        name: "all",
+        meta: {
+          title: "项目列表"
+        }
+      },
+      {
+        path: "mine",
+        component: () => import("@/views/projects/mine/index.vue"),
+        name: "mine",
+        meta: {
+          title: "我的项目"
+        }
+      }
+    ]
+  },
+  {
+    path: "/course",
+    component: Layout,
+    redirect: "/course/index",
+    children: [
+      {
+        path: "index",
+        component: () => import("@/views/course/index.vue"),
+        name: "course",
+        meta: {
+          title: "选课管理",
+          svgIcon: "course"
+        }
+      }
+    ]
+  },
+  {
+    path: "/exam",
+    component: Layout,
+    redirect: "/exam/index",
+    children: [
+      {
+        path: "index",
+        component: () => import("@/views/exam/index.vue"),
+        name: "exam",
+        meta: {
+          title: "考试管理",
+          svgIcon: "exam"
         }
       }
     ]
@@ -126,11 +186,11 @@ export const constantRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: "index",
-        component: () => import("@/views/information/index.vue"),
+        component: () => import("@/views/information/tinymce.vue"),
         name: "infomation",
         meta: {
           title: "信息发布",
-          svgIcon: "link"
+          svgIcon: "info"
         }
       }
     ]
@@ -139,6 +199,10 @@ export const constantRoutes: RouteRecordRaw[] = [
     path: "/post",
     component: Layout,
     redirect: "/post/:postId",
+    // make the page not shown in the sidebar
+    meta: {
+      hidden: true
+    },
     children: [
       {
         path: "/:postId",
@@ -154,6 +218,9 @@ export const constantRoutes: RouteRecordRaw[] = [
   {
     path: "/link",
     component: Layout,
+    meta: {
+      hidden: true
+    },
     children: [
       {
         path: "https://juejin.cn/post/7089377403717287972",
@@ -173,7 +240,8 @@ export const constantRoutes: RouteRecordRaw[] = [
     name: "Table",
     meta: {
       title: "表格",
-      elIcon: "Grid"
+      elIcon: "Grid",
+      hidden: true
     },
     children: [
       {
@@ -203,7 +271,8 @@ export const constantRoutes: RouteRecordRaw[] = [
     name: "Menu",
     meta: {
       title: "多级菜单",
-      svgIcon: "menu"
+      svgIcon: "menu",
+      hidden: true
     },
     children: [
       {
@@ -278,7 +347,8 @@ export const constantRoutes: RouteRecordRaw[] = [
     meta: {
       title: "hook 示例",
       elIcon: "Menu",
-      alwaysShow: true
+      alwaysShow: true,
+      hidden: true
     },
     children: [
       {
@@ -316,7 +386,8 @@ export const asyncRoutes: RouteRecordRaw[] = [
       title: "权限管理",
       svgIcon: "lock",
       roles: ["admin", "editor"], // 可以在根路由中设置角色
-      alwaysShow: true // 将始终显示根菜单
+      alwaysShow: true, // 将始终显示根菜单
+      hidden: true
     },
     children: [
       {

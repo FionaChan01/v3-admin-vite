@@ -4,11 +4,25 @@ import { usePermissionStoreHook } from "@/store/modules/permission"
 import { ElMessage } from "element-plus"
 import { whiteList } from "@/config/white-list"
 import { getToken } from "@/utils/cache/cookies"
+import { getRole } from "@/api/login"
 import asyncRouteSettings from "@/config/async-route"
 import NProgress from "nprogress"
 import "nprogress/nprogress.css"
 
 NProgress.configure({ showSpinner: false })
+
+setRoutes = (role: string) => {
+  const roles = role
+  const accessRoutes = asyncRoutes.filter((route) => {
+    if (hasPermission(roles, route)) {
+      if (route.children && route.children.length) {
+        route.children = filterAsyncRoutes(route.children, roles)
+      }
+      return true
+    }
+    return false
+  })
+}
 
 router.beforeEach(async (to, _from, next) => {
   NProgress.start()
@@ -21,20 +35,15 @@ router.beforeEach(async (to, _from, next) => {
       next({ path: "/" })
       NProgress.done()
     } else {
-      // 检查用户是否已获得其权限角色
       if (userStore.roles.length === 0) {
         try {
-          if (asyncRouteSettings.open) {
-            // 注意：角色必须是一个数组！ 例如: ['admin'] 或 ['developer', 'editor']
-            await userStore.getInfo()
-            const roles = userStore.roles
+          // 注意：角色必须是一个数组！ 例如: ['admin'] 或 ['developer', 'editor']
+          const data = { token: getToken() }
+          getRole(data).then((res) => {
+            const role = res.data.role
             // 根据角色生成可访问的 Routes（可访问路由 = 常驻路由 + 有访问权限的动态路由）
-            permissionStore.setRoutes(roles)
-          } else {
-            // 没有开启动态路由功能，则启用默认角色
-            userStore.setRoles(asyncRouteSettings.defaultRoles)
-            permissionStore.setRoutes(asyncRouteSettings.defaultRoles)
-          }
+            setRoutes(role)
+          })
           // 将'有访问权限的动态路由' 添加到 Router 中
           permissionStore.dynamicRoutes.forEach((route) => {
             router.addRoute(route)
