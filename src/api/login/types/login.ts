@@ -15,4 +15,6 @@ export type LoginCodeResponseData = string
 
 export type LoginResponseData = IApiResponseData<{ token: string }>
 
-export type UserInfoResponseData = IApiResponseData<{ username: string; role: string }>
+export type UserInfoResponseData = IApiResponseData<{ username: string; roles: string[] }>
+
+export type IRoleData = IApiResponseData<{ role: string }>

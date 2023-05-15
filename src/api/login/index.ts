@@ -19,8 +19,15 @@ export function loginApi(data: Login.ILoginRequestData) {
 }
 
 /** 获取用户详情 */
-export function getRole(data: Login.ITokenData) {
+export function getUserInfoApi() {
   return request<Login.UserInfoResponseData>({
+    url: "users/info",
+    method: "get"
+  })
+}
+
+export function getRole(data: Login.ITokenData) {
+  return request<Login.IRoleData>({
     url: "login/role",
     method: "post",
     data

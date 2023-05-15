@@ -4,17 +4,17 @@ import { defineStore } from "pinia"
 import { usePermissionStore } from "./permission"
 import { useTagsViewStore } from "./tags-view"
 import { getToken, removeToken, setToken } from "@/utils/cache/cookies"
-import router, { resetRouter } from "@/router"
-import { loginApi, getRole } from "@/api/login"
+import router, { resetRouter, resetAsncRouter } from "@/router"
+import { loginApi, getUserInfoApi } from "@/api/login"
 import { type ILoginRequestData } from "@/api/login/types/login"
 import { type RouteRecordRaw } from "vue-router"
 import asyncRouteSettings from "@/config/async-route"
-import { verify } from "crypto"
 
 export const useUserStore = defineStore("user", () => {
   const token = ref<string>(getToken() || "")
   const roles = ref<string[]>([])
   const username = ref<string>("")
+  const role = ref<string>("")
 
   const permissionStore = usePermissionStore()
   const tagsViewStore = useTagsViewStore()
@@ -22,6 +22,9 @@ export const useUserStore = defineStore("user", () => {
   /** 设置角色数组 */
   const setRoles = (value: string[]) => {
     roles.value = value
+  }
+  const setRole = (value: string) => {
+    role.value = value
   }
   /** 登录 */
   const login = (loginData: ILoginRequestData) => {
@@ -80,7 +83,9 @@ export const useUserStore = defineStore("user", () => {
     removeToken()
     token.value = ""
     roles.value = []
+    role.value = ""
     resetRouter()
+    resetAsncRouter()
     _resetTagsView()
   }
   /** 重置 Token */
@@ -95,7 +100,7 @@ export const useUserStore = defineStore("user", () => {
     tagsViewStore.delAllCachedViews()
   }
 
-  return { token, roles, username, setRoles, login, getInfo, changeRoles, logout, resetToken }
+  return { token, roles, username, role, setRoles, setRole, login, getInfo, changeRoles, logout, resetToken }
 })
 
 /** 在 setup 外使用 */

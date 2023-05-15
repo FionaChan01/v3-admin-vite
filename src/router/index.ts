@@ -5,6 +5,26 @@ const Layout = () => import("@/layout/index.vue")
 /** 常驻路由 */
 export const constantRoutes: RouteRecordRaw[] = [
   {
+    path: "/",
+    component: Layout,
+    redirect: "/dashboard",
+    children: [
+      {
+        path: "dashboard",
+        component: () => import("@/views/dashboard/index.vue"),
+        name: "Dashboard",
+        meta: {
+          title: "首页",
+          svgIcon: "home",
+          affix: true
+        }
+      }
+    ],
+    meta: {
+      roles: ["student", "teacher"]
+    }
+  },
+  {
     path: "/redirect",
     component: Layout,
     meta: {
@@ -39,23 +59,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       hidden: true
     }
   },
-  {
-    path: "/",
-    component: Layout,
-    redirect: "/dashboard",
-    children: [
-      {
-        path: "dashboard",
-        component: () => import("@/views/dashboard/index.vue"),
-        name: "Dashboard",
-        meta: {
-          title: "首页",
-          svgIcon: "home",
-          affix: true
-        }
-      }
-    ]
-  },
+
   {
     path: "/scholarship",
     component: Layout,
@@ -63,7 +67,8 @@ export const constantRoutes: RouteRecordRaw[] = [
     name: "scholarship",
     meta: {
       title: "奖学金管理",
-      svgIcon: "scholarship"
+      svgIcon: "scholarship",
+      roles: ["student"]
     },
     children: [
       {
@@ -107,6 +112,9 @@ export const constantRoutes: RouteRecordRaw[] = [
     path: "/thesis",
     component: Layout,
     redirect: "/thesis/index",
+    meta: {
+      roles: ["student"]
+    },
     children: [
       {
         path: "index",
@@ -126,7 +134,8 @@ export const constantRoutes: RouteRecordRaw[] = [
     name: "projects",
     meta: {
       title: "项目管理",
-      svgIcon: "project"
+      svgIcon: "project",
+      roles: ["student"]
     },
     children: [
       {
@@ -151,6 +160,9 @@ export const constantRoutes: RouteRecordRaw[] = [
     path: "/course",
     component: Layout,
     redirect: "/course/index",
+    meta: {
+      roles: ["student"]
+    },
     children: [
       {
         path: "index",
@@ -167,6 +179,9 @@ export const constantRoutes: RouteRecordRaw[] = [
     path: "/exam",
     component: Layout,
     redirect: "/exam/index",
+    meta: {
+      roles: ["student"]
+    },
     children: [
       {
         path: "index",
@@ -183,6 +198,9 @@ export const constantRoutes: RouteRecordRaw[] = [
     path: "/information",
     component: Layout,
     redirect: "/information/index",
+    meta: {
+      roles: ["teacher"]
+    },
     children: [
       {
         path: "index",
@@ -376,48 +394,7 @@ export const constantRoutes: RouteRecordRaw[] = [
  * 用来放置有权限 (Roles 属性) 的路由
  * 必须带有 Name 属性
  */
-export const asyncRoutes: RouteRecordRaw[] = [
-  {
-    path: "/permission",
-    component: Layout,
-    redirect: "/permission/page",
-    name: "Permission",
-    meta: {
-      title: "权限管理",
-      svgIcon: "lock",
-      roles: ["admin", "editor"], // 可以在根路由中设置角色
-      alwaysShow: true, // 将始终显示根菜单
-      hidden: true
-    },
-    children: [
-      {
-        path: "page",
-        component: () => import("@/views/permission/page.vue"),
-        name: "PagePermission",
-        meta: {
-          title: "页面权限",
-          roles: ["admin"] // 或者在子导航中设置角色
-        }
-      },
-      {
-        path: "directive",
-        component: () => import("@/views/permission/directive.vue"),
-        name: "DirectivePermission",
-        meta: {
-          title: "指令权限" // 如果未设置角色，则表示：该页面不需要权限，但会继承根路由的角色
-        }
-      }
-    ]
-  },
-  {
-    path: "/:pathMatch(.*)*", // Must put the 'ErrorPage' route at the end, 必须将 'ErrorPage' 路由放在最后
-    redirect: "/404",
-    name: "ErrorPage",
-    meta: {
-      hidden: true
-    }
-  }
-]
+export let asyncRoutes: RouteRecordRaw[] = []
 
 const router = createRouter({
   history:
@@ -437,6 +414,16 @@ export function resetRouter() {
         router.hasRoute(name) && router.removeRoute(name)
       }
     })
+  } catch (error) {
+    // 强制刷新浏览器也行，只是交互体验不是很好
+    window.location.reload()
+  }
+}
+/** 重置路由 */
+export function resetAsncRouter() {
+  // 注意：所有动态路由路由必须带有 Name 属性，否则可能会不能完全重置干净
+  try {
+    asyncRoutes = []
   } catch (error) {
     // 强制刷新浏览器也行，只是交互体验不是很好
     window.location.reload()

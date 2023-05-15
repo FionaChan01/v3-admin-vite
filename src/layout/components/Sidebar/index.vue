@@ -8,6 +8,7 @@ import { useSettingsStore } from "@/store/modules/settings"
 import SidebarItem from "./SidebarItem.vue"
 import SidebarLogo from "./SidebarLogo.vue"
 import { getCssVariableValue } from "@/utils"
+import { asyncRoutes, constantRoutes } from "@/router"
 
 const v3SidebarMenuBgColor = getCssVariableValue("--v3-sidebar-menu-bg-color")
 const v3SidebarMenuTextColor = getCssVariableValue("--v3-sidebar-menu-text-color")
@@ -48,7 +49,7 @@ const isCollapse = computed(() => {
         mode="vertical"
       >
         <SidebarItem
-          v-for="route in permissionStore.routes"
+          v-for="route in asyncRoutes"
           :key="route.path"
           :item="route"
           :base-path="route.path"
