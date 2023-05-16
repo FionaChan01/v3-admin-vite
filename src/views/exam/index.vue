@@ -50,7 +50,7 @@ export default {
       exams: [
         {
           id: 1,
-          type: 0,
+          type: 1,
           scheduleDate: "2023-04-27",
           course: "机器学习",
           courseNumber: "658965",
@@ -68,8 +68,8 @@ export default {
         },
         {
           id: 2,
-          type: 1,
-          scheduleDate: "2023-04-27",
+          type: 0,
+          scheduleDate: "2023-05-27",
           course: "数据结构",
           courseNumber: "789654",
           teacher: "李四",
@@ -87,7 +87,7 @@ export default {
         {
           id: 3,
           type: 0,
-          scheduleDate: "2023-04-29",
+          scheduleDate: "2023-05-29",
           course: "数据库",
           courseNumber: "456789",
           teacher: "赵六",
@@ -105,7 +105,7 @@ export default {
         {
           id: 4,
           type: 1,
-          scheduleDate: "2023-04-30",
+          scheduleDate: "2023-05-30",
           course: "操作系统",
           courseNumber: "987654",
           teacher: "王八",
