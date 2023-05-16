@@ -41,6 +41,7 @@ router.beforeEach(async (to, _from, next) => {
     }
   } else {
     // 如果没有 Token
+    console.log(to.path)
     if (whiteList.indexOf(to.path) !== -1) {
       // 如果在免登录的白名单中，则直接进入
       next()
