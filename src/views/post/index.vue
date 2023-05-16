@@ -9,7 +9,7 @@
             <span>{{ post.author }}</span>
             <span>{{ post.iTime }}</span>
           </div>
-          <div v-html="post.iContent" class="post-content" />
+          <editor :init="init" :api-key="apiKey" v-model="content" />
         </el-card>
       </el-col>
     </el-row>
@@ -24,7 +24,9 @@ export default {
   },
   data() {
     return {
-      post: {}
+      post: {},
+      content: "",
+      apiKey: "1kf68b8jnzsbtaxh2p1ek44moofujp4q78k51lx9x9svgq4c"
     }
   },
   created() {
@@ -32,7 +34,20 @@ export default {
     getInfoById(this.postId).then((res) => {
       this.post = res.data.information
       this.post.author = res.data.author
+      this.content = this.post.iContent
     })
+  },
+  methods() {
+    const init = {
+      plugins: "image | fullscreen | charmap | emoticons | insertdatetime | wordcount | code",
+      toolbar: "image | fullscreen | charmap | emoticons | insertdatetime | wordcount | code",
+      images_upload_url: "http://localhost:8080/information/uploadImage", // 请替换为处理图片上传的后端URL
+      init_instance_callback: (editor) => {
+        editor.on("change", () => {
+          this.content.value = editor.getContent()
+        })
+      }
+    }
   }
 }
 </script>
