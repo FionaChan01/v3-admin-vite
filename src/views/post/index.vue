@@ -41,15 +41,13 @@ export default defineComponent({
     console.log(data)
     // 在实际应用中，您可能需要从服务器获取博客文章数据
     getInfoById(data).then((res) => {
-      post = res.data.information
-      post.author = res.data.author
-      content = post.iContent
+      post.value = res.data.information
+      post.value.author = res.data.author
+      content = post.value.iContent
     })
   },
   setup() {
     const init = {
-      plugins: "image | fullscreen | charmap | emoticons | insertdatetime | wordcount | code",
-      toolbar: "image | fullscreen | charmap | emoticons | insertdatetime | wordcount | code",
       images_upload_url: "http://localhost:8080/information/uploadImage", // 请替换为处理图片上传的后端URL
       init_instance_callback: (editor) => {
         editor.on("change", () => {
