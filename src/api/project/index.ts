@@ -7,6 +7,13 @@ export function getAllProjects() {
   })
 }
 
+export function getMyProjects() {
+  return request({
+    url: "project/myProjects",
+    method: "get"
+  })
+}
+
 export function getProjectByStudentId() {
   return request({
     url: "project/getProjectByStudentId",

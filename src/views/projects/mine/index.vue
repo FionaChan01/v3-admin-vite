@@ -2,38 +2,36 @@
   <div class="app-container">
     <el-card shadow="never">
       <div class="table-wrapper">
-        <el-dialog v-model="visible" :show-close="false">
+        <!-- <el-dialog v-model="visible" :show-close="false">
           <template #header="{ close, titleId, titleClass }">
-            <div class="my-header">
-              <h4 :id="titleId" :class="titleClass">老师详情</h4>
-              <el-button @click="close">
+            <div class="card-header">
+              <h4 :id="titleId" :class="titleClass">{{ selectedTeacher }}</h4>
+              <el-button class="close-button" @click="close" type="danger">
                 <el-icon class="el-icon--left"><CircleCloseFilled /></el-icon>
-                Close
+                关闭
               </el-button>
             </div>
           </template>
-          张三老师的研究方向为：机器学习，深度学习，强化学习，致力于机器学习相关交叉应用的落地
-        </el-dialog>
-        <el-table :data="tableData" :stripe="true">
-          <el-table-column prop="id" label="项目id" align="center" />
-          <el-table-column prop="name" label="项目名称" align="center" width="210" />
-          <el-table-column prop="advisor" label="指导老师" align="center">
-            <template #default="scope">
-              <el-link @click="visible = true" target="_blank">{{ scope.row.advisor }}</el-link>
-            </template>
+          {{ selectedTeacher }}老师的研究方向为：{{ teacherDesc }}
+        </el-dialog> -->
+        <el-table :data="projectData" :stripe="true">
+          <el-table-column type="index" :index="indexMethod" />
+          <el-table-column prop="pName" label="项目名称" align="center" width="210" />
+          <el-table-column prop="teacherName" label="指导老师" align="center">
+            <!-- <template #default="scope">
+              <el-link @click="selectTeacher(scope.row.$index)" target="_blank">{{ scope.row.advisor }}</el-link>
+            </template> -->
           </el-table-column>
-          <el-table-column prop="type" label="类别" align="center" />
-          <el-table-column prop="dept" label="部门" align="center" />
-          <el-table-column prop="source" label="课题来源" align="center" />
-          <el-table-column prop="status" label="课题状态" align="center">
+          <el-table-column prop="pType" label="类别" align="center" />
+          <el-table-column prop="pDept" label="部门" align="center" />
+          <el-table-column prop="pSource" label="课题来源" align="center" />
+          <el-table-column prop="pIntro" label="简介" align="center" width="400" />
+          <el-table-column prop="pStatus" label="状态" align="center">
             <template #default="scope">
-              <el-tag v-if="scope.row.status == 0" type="success" effect="plain">可选</el-tag>
-              <el-tag v-else type="danger" effect="plain">不可选</el-tag>
+              <el-tag v-if="scope.row.pStatus === '已通过'" type="success" effect="plain">项目成员</el-tag>
+              <el-tag v-if="scope.row.pStatus === '待审核'" type="warning" effect="plain">等待教师审核项目申请</el-tag>
+              <el-tag v-if="scope.row.pStatus === '未通过'" type="danger" effect="plain">未通过申请，非项目成员</el-tag>
             </template>
-          </el-table-column>
-          <el-table-column prop="intro" label="简介" align="center" width="600" />
-          <el-table-column prop="action" label="操作" align="center">
-            <el-button size="small" @click="choose()">选择</el-button>
           </el-table-column>
         </el-table>
       </div>
@@ -42,77 +40,46 @@
 </template>
 
 <script lang="ts">
-import { ElMessage, ElMessageBox } from "element-plus"
+import { getMyProjects } from "@/api/project"
 export default {
   data() {
     return {
+      selectedTeacher: "",
+      teacherDesc: "",
       visible: false,
-      tableData: [
-        {
-          id: 1,
-          name: "基于深度学习的自动驾驶系统",
-          advisor: "张三",
-          type: "科研",
-          dept: "计算机科学",
-          source: "校内",
-          status: 0,
-          intro: "本项目旨在研究和开发基于深度学习技术的自动驾驶系统，提高驾驶安全性和效率。"
-        },
-        {
-          id: 2,
-          name: "智能物联网安防系统",
-          advisor: "李四",
-          type: "项目",
-          dept: "信息工程",
-          source: "企业合作",
-          status: 1,
-          intro: "本项目与企业合作，研究和开发基于物联网技术的智能安防系统，实现远程监控和预警功能。"
-        },
-        {
-          id: 3,
-          name: "区块链在金融领域的应用研究",
-          advisor: "王五",
-          type: "科研",
-          dept: "金融工程",
-          source: "校内",
-          status: 0,
-          intro: "本项目旨在探讨区块链技术在金融领域的应用，分析其在金融市场中的潜力与挑战。"
-        },
-        {
-          id: 4,
-          name: "基于大数据的智慧城市规划",
-          advisor: "赵六",
-          type: "项目",
-          dept: "城市规划",
-          source: "政府合作",
-          status: 1,
-          intro: "本项目与政府合作，利用大数据技术对城市规划进行分析和优化，提升城市可持续发展能力。"
-        }
-      ],
+      projectData: [],
+      pStatus: [],
+      teacherNames: [],
       searchData: {
         name: "",
         advisor: ""
       }
     }
   },
+  created() {
+    this.fetchProjects()
+  },
   methods: {
-    choose() {
-      ElMessageBox.confirm("确认选择该项目？", {
-        confirmButtonText: "确认",
-        cancelButtonText: "取消"
-      })
-        .then(() => {
-          ElMessage({
-            type: "success",
-            message: "成功提交申请"
-          })
+    fetchProjects() {
+      getMyProjects()
+        .then((data) => {
+          this.projectData = data.data
+          this.teacherNames = data.teacherNames
+          this.pStatus = data.status
+          for (let i = 0; i < this.projectData.length; i++) {
+            this.projectData[i].teacherName = this.teacherNames[i]
+          }
+          for (let i = 0; i < this.projectData.length; i++) {
+            this.projectData[i].pStatus = this.pStatus[i]
+          }
         })
-        .catch(() => {
-          ElMessage({
-            type: "info",
-            message: "选择失败"
-          })
+        .catch((error: any) => {
+          // 处理错误情况
+          console.log(error)
         })
+    },
+    indexMethod(index: number) {
+      return index + 1
     }
   }
 }
@@ -139,5 +106,19 @@ export default {
 .pager-wrapper {
   display: flex;
   justify-content: flex-end;
+}
+
+.close-button {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.card-header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>
