@@ -43,7 +43,7 @@ export default defineComponent({
     getInfoById(data).then((res) => {
       post.value = res.data.information
       post.value.author = res.data.author
-      content = post.value.iContent
+      content.value = post.value.iContent
     })
   },
   setup() {
