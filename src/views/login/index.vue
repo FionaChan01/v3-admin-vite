@@ -18,7 +18,7 @@ const loading = ref(false)
 /** 验证码图片 URL */
 /** 登录表单数据 */
 const loginForm: ILoginRequestData = reactive({
-  username: "admin",
+  username: "2019194178",
   password: "12345678",
   verifyCodeActual: ""
 })
