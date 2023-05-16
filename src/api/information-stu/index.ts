@@ -6,3 +6,11 @@ export function getAllInfo() {
     method: "get"
   })
 }
+
+export function getInfoById(data) {
+  return request({
+    url: "information/getInfoById",
+    method: "get",
+    data
+  })
+}
