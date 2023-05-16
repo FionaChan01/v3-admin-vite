@@ -137,7 +137,7 @@ export default {
       }
     },
     fetchThesis() {
-      getThesisByStudentId(this.studentId)
+      getThesisByStudentId()
         .then((data) => {
           this.thesisTableData = data.data
           //traverse thesisTableData

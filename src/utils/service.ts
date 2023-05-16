@@ -3,7 +3,9 @@ import { useUserStoreHook } from "@/store/modules/user"
 import { ElMessage } from "element-plus"
 import { get } from "lodash-es"
 import { getToken } from "./cache/cookies"
+import qs from "qs"
 axios.defaults.withCredentials = true
+
 /** 创建请求实例 */
 function createService() {
   // 创建一个 Axios 实例
@@ -11,11 +13,16 @@ function createService() {
   // 请求拦截
   service.interceptors.request.use(
     (config) => {
+      console.log(getToken())
       // 在发送请求之前做些什么
       // add token to the request header
-      if (getToken()) {
+      // console.log("在外面")
+      if (!(getToken() === undefined)) {
+        // console.log("进去了")
         config.headers["Authorization"] = "Bearer " + getToken()
       }
+      config.data = qs.stringify(config.data)
+      console.log(config)
       return config
     },
     // 发送失败

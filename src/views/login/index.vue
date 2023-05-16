@@ -36,11 +36,11 @@ const handleLogin = () => {
   loginFormRef.value?.validate((valid: boolean) => {
     if (valid) {
       loading.value = true
-      const postData = qs.stringify({
+      const postData = {
         username: loginForm.username,
         password: loginForm.password,
         verifyCodeActual: loginForm.verifyCodeActual
-      })
+      }
       loginApi(postData).then((res) => {
         router.push({ path: "/dashboard" })
       })

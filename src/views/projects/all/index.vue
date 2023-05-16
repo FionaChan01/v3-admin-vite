@@ -43,7 +43,7 @@
 
 <script lang="ts">
 import { ElMessage, ElMessageBox } from "element-plus"
-import { ProjectDisplayAPIResponse, getProjectByStudentId, getAllProjects } from "@/api/project"
+import { getProjectByStudentId, getAllProjects } from "@/api/project"
 export default {
   data() {
     return {
@@ -65,8 +65,8 @@ export default {
     fetchProjects() {
       getAllProjects()
         .then((data) => {
-          this.projectData = data.data
-          this.teacherNames = data.teacherNames
+          this.projectData = data.data.data
+          this.teacherNames = data.data.teacherNames
           for (let i = 0; i < this.projectData.length; i++) {
             this.projectData[i].teacherId = this.teacherNames[i]
           }

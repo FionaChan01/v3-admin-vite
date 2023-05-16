@@ -55,7 +55,8 @@
 </style>
 
 <script lang="ts">
-import { getStudentInformationById, StudentInformationAPIResponse } from "@/api/dashboard"
+import { display } from "@/api/dashboard"
+import { IDashboardStuResponseData } from "@/api/dashboard/types/dashboard"
 import { format, parseISO } from "date-fns"
 
 export default {
@@ -89,11 +90,11 @@ export default {
   },
   methods: {
     fetchData() {
-      getStudentInformationById(this.id)
-        .then((data: StudentInformationAPIResponse) => {
-          this.mentor = data.mentorName
+      display()
+        .then((data) => {
+          this.mentor = data.data.mentorName
           // 处理接口返回的数据
-          const studentInfo = data.data
+          const studentInfo = data.data.data
           this.name = studentInfo.sName
           this.gender = studentInfo.sGender
           this.ethnicity = studentInfo.sEthnicity

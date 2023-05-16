@@ -20,10 +20,12 @@ router.beforeEach(async (to, _from, next) => {
   if (getToken()) {
     if (to.path === "/login") {
       next({ path: "/" })
+      // console.log("to path login")
       NProgress.done()
     } else {
+      // console.log("to path login 2")
       if (userStore.role === "") {
-        const data = qs.stringify({ token: getToken() })
+        const data = { token: getToken() }
         await getRole(data).then((res) => {
           userStore.setRole(res.data.role)
           constantRoutes.forEach((item) => {
@@ -36,7 +38,12 @@ router.beforeEach(async (to, _from, next) => {
         next({ path: "/" })
         NProgress.done()
       } else {
+        // console.log("to path login 3")
+        // console.log(next())
+        // next({ path: to.path })
+        // NProgress.done()
         next()
+        NProgress.done()
       }
     }
   } else {
