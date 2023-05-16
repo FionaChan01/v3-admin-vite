@@ -9,7 +9,7 @@
             <span>{{ post.author }}</span>
             <span>{{ post.iTime }}</span>
           </div>
-          <editor :init="init" :api-key="apiKey" v-model="content" />
+          <vue-markdown :source="content" />
         </el-card>
       </el-col>
     </el-row>
@@ -19,17 +19,15 @@
 <script lang="ts">
 import { getInfoById } from "@/api/information-stu"
 import { defineComponent } from "vue"
-import Editor from "@/components/editor/index"
 import { ref } from "vue"
+import VueMarkdown from 'vue-markdown';
 
-const apiKey = "1kf68b8jnzsbtaxh2p1ek44moofujp4q78k51lx9x9svgq4c"
-const content = ref('')
+const content = ref("")
 const post = ref({})
-
 
 export default defineComponent({
   components: {
-    Editor
+    VueMarkdown
   },
   props: {
     postId: Number
@@ -47,17 +45,7 @@ export default defineComponent({
     })
   },
   setup() {
-    const init = {
-      images_upload_url: "http://localhost:8080/information/uploadImage", // 请替换为处理图片上传的后端URL
-      init_instance_callback: (editor) => {
-        editor.on("change", () => {
-          content.value = editor.getContent()
-        })
-      }
-    }
     return {
-      init,
-      apiKey,
       content,
       post
     }
