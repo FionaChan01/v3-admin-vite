@@ -13,3 +13,11 @@ export function getProjectByStudentId() {
     method: "get"
   })
 }
+
+export function submitProjectApplication(data) {
+  return request({
+    url: "project/submitProjectApplication",
+    method: "post",
+    data
+  })
+}
