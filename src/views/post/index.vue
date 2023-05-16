@@ -9,7 +9,7 @@
             <span>{{ post.author }}</span>
             <span>{{ post.iTime }}</span>
           </div>
-          <vue-markdown :source="content" />
+          <div v-html="content" />
         </el-card>
       </el-col>
     </el-row>
@@ -20,15 +20,11 @@
 import { getInfoById } from "@/api/information-stu"
 import { defineComponent } from "vue"
 import { ref } from "vue"
-import VueMarkdown from 'vue-markdown';
 
 const content = ref("")
 const post = ref({})
 
 export default defineComponent({
-  components: {
-    VueMarkdown
-  },
   props: {
     postId: Number
   },
