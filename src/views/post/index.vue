@@ -18,16 +18,21 @@
 
 <script lang="ts">
 import { getInfoById } from "@/api/information-stu"
-export default {
+import { defineComponent } from "vue"
+import Editor from "@/components/editor/index"
+import { ref } from "vue"
+
+const apiKey = "1kf68b8jnzsbtaxh2p1ek44moofujp4q78k51lx9x9svgq4c"
+const content = ref('')
+const post = ref({})
+
+
+export default defineComponent({
+  components: {
+    Editor
+  },
   props: {
     postId: Number
-  },
-  data() {
-    return {
-      post: {},
-      content: "",
-      apiKey: "1kf68b8jnzsbtaxh2p1ek44moofujp4q78k51lx9x9svgq4c"
-    }
   },
   created() {
     const data = {
@@ -36,9 +41,9 @@ export default {
     console.log(data)
     // 在实际应用中，您可能需要从服务器获取博客文章数据
     getInfoById(data).then((res) => {
-      this.post = res.data.information
-      this.post.author = res.data.author
-      this.content = this.post.iContent
+      post = res.data.information
+      post.author = res.data.author
+      content = post.iContent
     })
   },
   setup() {
@@ -48,15 +53,18 @@ export default {
       images_upload_url: "http://localhost:8080/information/uploadImage", // 请替换为处理图片上传的后端URL
       init_instance_callback: (editor) => {
         editor.on("change", () => {
-          this.content.value = editor.getContent()
+          content.value = editor.getContent()
         })
       }
     }
     return {
-      init
+      init,
+      apiKey,
+      content,
+      post
     }
   }
-}
+})
 </script>
 
 <style scoped>
