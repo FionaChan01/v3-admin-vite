@@ -1,4 +1,4 @@
 /** 免登录白名单 */
-const whiteList = ["/login", "/information-stu/index"]
+const whiteList = ["/login"]
 
 export { whiteList }

@@ -214,25 +214,6 @@ export const constantRoutes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: "/information-stu",
-    component: Layout,
-    redirect: "/information-stu/index",
-    meta: {
-      roles: ["student"]
-    },
-    children: [
-      {
-        path: "index",
-        component: () => import("@/views/information-stu/index.vue"),
-        name: "infomation-stu",
-        meta: {
-          title: "信息查看",
-          svgIcon: "info"
-        }
-      }
-    ]
-  },
-  {
     path: "/post",
     component: Layout,
     redirect: "/post/:postId",

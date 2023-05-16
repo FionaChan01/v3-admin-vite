@@ -9,22 +9,22 @@
       </el-button-group>
     </div>
     <el-row :gutter="20">
-      <el-col :span="6" v-for="post in blogPostsShow" :key="post.iId">
-        <el-card :class="['blog-post', selectedStyle]" @click.native="openBlogPost(post.iId)">
-          <h2 class="post-title">{{ post.iTitle }}</h2>
+      <el-col :span="6" v-for="post in blogPostsShow" :key="post.id">
+        <el-card :class="['blog-post', selectedStyle]" @click.native="openBlogPost(post.id)">
+          <h2 class="post-title">{{ post.title }}</h2>
           <div class="post-meta">
             <span>{{ post.author }}</span>
-            <span>{{ post.iTime }}</span>
+            <span>{{ post.date }}</span>
           </div>
           <el-row style="float: right">
-            <el-tag v-if="post.iTag == 1" round>学术前沿</el-tag>
-            <el-tag v-if="post.iTag == 2" type="danger" round>招聘就业</el-tag>
-            <el-tag v-if="post.iTag == 3" type="warning" round>创新创业</el-tag>
-            <el-tag v-if="post.iTag == 4" type="success" round>国际交流</el-tag>
-            <el-tag v-if="post.iTag == 5" type="info" round>校园生活</el-tag>
+            <el-tag v-if="post.tag == 1" round>学术前沿</el-tag>
+            <el-tag v-if="post.tag == 2" type="danger" round>招聘就业</el-tag>
+            <el-tag v-if="post.tag == 3" type="warning" round>创新创业</el-tag>
+            <el-tag v-if="post.tag == 4" type="success" round>国际交流</el-tag>
+            <el-tag v-if="post.tag == 5" type="info" round>校园生活</el-tag>
           </el-row>
           <el-row>
-            <div class="post-content">{{ post.iIntro }}</div>
+            <div class="post-content">{{ post.intro }}</div>
           </el-row>
         </el-card>
       </el-col>
@@ -33,8 +33,6 @@
 </template>
 
 <script>
-import { getAllInfo } from "@/api/information-stu"
-
 export default {
   data() {
     return {
@@ -49,30 +47,30 @@ export default {
       ],
       blogPosts: [
         {
-          iId: 1,
-          iTitle: "国家重点研发计划“多媒体大数据的隐私保护技术”项目启动暨实施方案论证会顺利召开",
+          id: 1,
+          title: "国家重点研发计划“多媒体大数据的隐私保护技术”项目启动暨实施方案论证会顺利召开",
           author: "重庆大学计算机学院",
-          iTag: 1,
-          iTime: "2023-04-11",
-          iIntro:
+          tag: 1,
+          date: "2023-04-11",
+          intro:
             "2023年4月8日，由重庆大学牵头承担的“十四五”国家重点研发计划项目“多媒体大数据的隐私保护技术”项目启动暨实施方案论证会顺利召开。工信部产业发展促进中心项目主管周由胜教授、重庆市科技局副局长许志鹏、重庆大学科发院副院长谢卫东等出席会议并讲话。"
+        },
+        {
+          id: 2,
+          title: "英国布里斯托大学3+1本硕双学位项目招生通知",
+          author: "重庆大学计算机学院",
+          tag: 4,
+          date: "2022-04-17",
+          intro:
+            "根据重庆大学与布里斯托大学签订的3+1本硕双学位项目校际合作协议及相关规定，现启动布里斯托大学3+1本硕双学位项目2022年暑假选拔营的招生选拔工作。"
         }
+        // 添加更多博客文章
       ],
       blogPostsShow: []
     }
   },
   created() {
-    getAllInfo().then((res) => {
-      this.blogPostsShow = res.data.information
-      for (let i = 0; i < this.blogPostsShow.length; i++) {
-        this.blogPostsShow[i].author = res.data.author[i]
-        if (this.blogPostsShow[i].iTag == "学术前沿") this.blogPostsShow[i].iTag = 1
-        else if (this.blogPostsShow[i].iTag == "招聘就业") this.blogPostsShow[i].iTag = 2
-        else if (this.blogPostsShow[i].iTag == "创新创业") this.blogPostsShow[i].iTag = 3
-        else if (this.blogPostsShow[i].iTag == "国际交流") this.blogPostsShow[i].iTag = 4
-        else if (this.blogPostsShow[i].iTag == "校园生活") this.blogPostsShow[i].iTag = 5
-      }
-    })
+    this.blogPostsShow = this.blogPosts
   },
   methods: {
     changeBlogSort(value) {
