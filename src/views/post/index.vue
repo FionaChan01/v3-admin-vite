@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { getInfoById } from "@/api/information-stu"
 export default {
   props: {
@@ -41,7 +41,7 @@ export default {
       this.content = this.post.iContent
     })
   },
-  methods() {
+  setup() {
     const init = {
       plugins: "image | fullscreen | charmap | emoticons | insertdatetime | wordcount | code",
       toolbar: "image | fullscreen | charmap | emoticons | insertdatetime | wordcount | code",
@@ -51,6 +51,9 @@ export default {
           this.content.value = editor.getContent()
         })
       }
+    }
+    return {
+      init
     }
   }
 }
