@@ -17,7 +17,7 @@
         <el-table :data="projectData" :stripe="true">
           <el-table-column type="index" :index="indexMethod" />
           <el-table-column prop="pName" label="项目名称" align="center" width="210" />
-          <el-table-column prop="teacherId" label="指导老师" align="center">
+          <el-table-column prop="teacherName" label="指导老师" align="center">
             <!-- <template #default="scope">
               <el-link @click="selectTeacher(scope.row.$index)" target="_blank">{{ scope.row.advisor }}</el-link>
             </template> -->
@@ -33,7 +33,10 @@
           </el-table-column>
           <el-table-column prop="pIntro" label="简介" align="center" width="600" />
           <el-table-column label="操作" align="center">
-            <el-button size="small" @click="choose()">选择</el-button>
+            <template #default="scope">
+              <el-button size="small" @click="choose(scope.row)" v-if="scope.row.pLimit > scope.row.pCurrentNum">选择</el-button>
+              <el-button size="small" v-else disabled>选择</el-button>
+            </template>
           </el-table-column>
         </el-table>
       </div>
@@ -43,7 +46,7 @@
 
 <script lang="ts">
 import { ElMessage, ElMessageBox } from "element-plus"
-import { getProjectByStudentId, getAllProjects } from "@/api/project"
+import { submitProjectApplication, getAllProjects } from "@/api/project"
 export default {
   data() {
     return {
@@ -68,7 +71,7 @@ export default {
           this.projectData = data.data.data
           this.teacherNames = data.data.teacherNames
           for (let i = 0; i < this.projectData.length; i++) {
-            this.projectData[i].teacherId = this.teacherNames[i]
+            this.projectData[i].teacherName = this.teacherNames[i]
           }
         })
         .catch((error: any) => {
@@ -79,15 +82,26 @@ export default {
     indexMethod(index: number) {
       return index + 1
     },
-    choose() {
+    choose(row: any) {
       ElMessageBox.confirm("确认选择该项目？", {
         confirmButtonText: "确认",
         cancelButtonText: "取消"
       })
         .then(() => {
-          ElMessage({
-            type: "success",
-            message: "成功提交申请"
+          // console.log("teacherId")
+          // console.log(row.teacherId)
+          // console.log("teacherId")
+          // console.log(row.teacherId)
+          const data = {
+            pId: row.pId,
+            teacherId: row.teacherId
+          }
+          submitProjectApplication(data).then(() => {
+            // console.log(res)
+            ElMessage({
+              type: "success",
+              message: "成功提交申请"
+            })
           })
         })
         .catch(() => {
