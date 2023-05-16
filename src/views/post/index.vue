@@ -28,8 +28,12 @@ export default {
     }
   },
   created() {
+    const data = {
+      iId: this.postId
+    }
+    console.log(data)
     // 在实际应用中，您可能需要从服务器获取博客文章数据
-    getInfoById(this.postId).then((res) => {
+    getInfoById(data).then((res) => {
       this.post = res.data.information
       this.post.author = res.data.author
     })
