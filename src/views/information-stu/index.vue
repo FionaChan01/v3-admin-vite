@@ -48,15 +48,15 @@ export default {
         { label: "校园生活", value: 5 }
       ],
       blogPosts: [
-        {
-          iId: 1,
-          iTitle: "国家重点研发计划“多媒体大数据的隐私保护技术”项目启动暨实施方案论证会顺利召开",
-          author: "重庆大学计算机学院",
-          iTag: 1,
-          iTime: "2023-04-11",
-          iIntro:
-            "2023年4月8日，由重庆大学牵头承担的“十四五”国家重点研发计划项目“多媒体大数据的隐私保护技术”项目启动暨实施方案论证会顺利召开。工信部产业发展促进中心项目主管周由胜教授、重庆市科技局副局长许志鹏、重庆大学科发院副院长谢卫东等出席会议并讲话。"
-        }
+        // {
+        //   iId: 1,
+        //   iTitle: "国家重点研发计划“多媒体大数据的隐私保护技术”项目启动暨实施方案论证会顺利召开",
+        //   author: "重庆大学计算机学院",
+        //   iTag: 1,
+        //   iTime: "2023-04-11",
+        //   iIntro:
+        //     "2023年4月8日，由重庆大学牵头承担的“十四五”国家重点研发计划项目“多媒体大数据的隐私保护技术”项目启动暨实施方案论证会顺利召开。工信部产业发展促进中心项目主管周由胜教授、重庆市科技局副局长许志鹏、重庆大学科发院副院长谢卫东等出席会议并讲话。"
+        // }
       ],
       blogPostsShow: []
     }
@@ -64,6 +64,7 @@ export default {
   created() {
     getAllInfo().then((res) => {
       this.blogPostsShow = res.data.information
+      this.blogPosts = this.blogPostsShow
       for (let i = 0; i < this.blogPostsShow.length; i++) {
         this.blogPostsShow[i].author = res.data.author[i]
         if (this.blogPostsShow[i].iTag == "学术前沿") this.blogPostsShow[i].iTag = 1
@@ -78,9 +79,10 @@ export default {
     changeBlogSort(value) {
       this.blogPostsShow = []
       if (value == 6) this.blogPostsShow = this.blogPosts
+      console.log(this.blogPosts)
       for (let index = 0; index < this.blogPosts.length; index++) {
         const element = this.blogPosts[index]
-        if (element.tag == value) {
+        if (element.iTag == value) {
           this.blogPostsShow.push(element)
         }
       }

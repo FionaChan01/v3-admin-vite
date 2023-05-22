@@ -88,20 +88,16 @@ export default {
         cancelButtonText: "取消"
       })
         .then(() => {
-          // console.log("teacherId")
-          // console.log(row.teacherId)
-          // console.log("teacherId")
-          // console.log(row.teacherId)
           const data = {
             pId: row.pId,
             teacherId: row.teacherId
           }
           submitProjectApplication(data).then(() => {
             // console.log(res)
-            ElMessage({
-              type: "success",
-              message: "成功提交申请"
-            })
+            // ElMessage({
+            //   type: "success",
+            //   message: "成功提交申请"
+            // })
           })
         })
         .catch(() => {

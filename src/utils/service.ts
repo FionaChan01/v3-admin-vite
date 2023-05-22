@@ -14,11 +14,8 @@ function createService() {
   service.interceptors.request.use(
     (config) => {
       console.log(getToken())
-      // 在发送请求之前做些什么
-      // add token to the request header
-      // console.log("在外面")
+      // 发送请求前在请求头中加入token
       if (!(getToken() === undefined)) {
-        // console.log("进去了")
         config.headers["Authorization"] = "Bearer " + getToken()
       }
       config.data = qs.stringify(config.data)
@@ -28,12 +25,10 @@ function createService() {
     // 发送失败
     (error) => Promise.reject(error)
   )
-  // 响应拦截（可根据具体业务作出相应的调整）
+  // 响应拦截
   service.interceptors.response.use(
     (response) => {
-      // apiData 是 API 返回的数据
       const apiData = response.data as any
-      // 这个 Code 是和后端约定的业务 Code
       const code = apiData.code
       // 如果没有 Code, 代表这不是项目后端开发的 API
       if (code === undefined) {
@@ -42,7 +37,9 @@ function createService() {
       } else {
         switch (code) {
           case 200:
-            // code === 0 代表没有错误
+            if (apiData.data === "该学生已经在项目中") {
+              ElMessage.error(apiData.data)
+            }
             return apiData
           default:
             // 不是正确的 Code

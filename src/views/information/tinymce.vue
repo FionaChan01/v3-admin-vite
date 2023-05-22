@@ -1,8 +1,11 @@
 <template>
   <div>
-    <h2>IFrame Editor</h2>
+    <el-main>
+      <h2>ℹ️ 信息发布</h2>
     <editor :init="init" :api-key="apiKey" v-model="content" />
     <el-button type="info" @click="upload">Submit</el-button>
+    </el-main>
+
   </div>
 </template>
 
@@ -13,7 +16,7 @@ import Editor from "@/components/editor/index"
 import { submit } from "@/api/information"
 import { getToken } from "@/utils/cache/cookies"
 const apiKey = "1kf68b8jnzsbtaxh2p1ek44moofujp4q78k51lx9x9svgq4c"
-const content = ref('<h2 style="text-align: center;">Write your article here...</h2>')
+const content = ref('<h2 style="text-align: center;">在此编辑内容...</h2>')
 
 export default defineComponent({
   components: {
