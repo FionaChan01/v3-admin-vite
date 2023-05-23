@@ -10,6 +10,8 @@
     </div>
     <el-row :gutter="20">
       <el-col :span="6" v-for="post in blogPostsShow" :key="post.iId">
+        <!-- 行间距 -->
+        <div style="height: 20px" />
         <el-card :class="['blog-post', selectedStyle]" @click.native="openBlogPost(post.iId)">
           <h2 class="post-title">{{ post.iTitle }}</h2>
           <div class="post-meta">

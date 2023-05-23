@@ -39,6 +39,12 @@ function createService() {
           case 200:
             if (apiData.data === "该学生已经在项目中") {
               ElMessage.error(apiData.data)
+            } else if(apiData.data === "已经选过该课程，禁止重复选课") {
+              ElMessage.error(apiData.data)
+            } else if(apiData.data === "选课成功") {
+              ElMessage.success(apiData.data)
+            }else if(apiData.data === "退选成功") {
+              ElMessage.success(apiData.data)
             }
             return apiData
           default:

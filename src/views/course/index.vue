@@ -7,18 +7,17 @@
         </div>
         <!-- 左侧条件查询栏 -->
         <div class="sidebar-content">
-          <el-form model="searchForm" label-width="80px" ref="searchForm">
-            <el-form-item label="学期">
-              <el-select v-model="searchForm.semester" placeholder="请选择">
-                <el-option label="第一学期" value="1" />
-                <el-option label="第二学期" value="2" />
-                <el-option label="第三学期" value="3" />
-              </el-select>
+          <el-form v-model="searchForm" label-width="80px" ref="searchForm">
+            <el-form-item label="课程名称">
+              <el-input v-model="searchForm.courseName" placeholder="请输入" />
             </el-form-item>
-            <el-form-item label="课程类型">
+            <el-form-item label="课程代码">
+              <el-input v-model="searchForm.courseNumber" placeholder="请输入" />
+            </el-form-item>
+            <el-form-item label="课程性质">
               <el-select v-model="searchForm.courseType" placeholder="请选择">
-                <el-option label="必修课" value="1" />
-                <el-option label="选修课" value="2" />
+                <el-option label="必修" value="必修" />
+                <el-option label="选修" value="选修" />
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -35,57 +34,65 @@
           <h3>📖 课程列表</h3>
         </div>
         <div class="content-body">
-          <el-drawer v-model="drawer" title="课程详情" class="course-drawer">
+          <el-drawer v-model="drawerList" title="课程详情" class="course-drawer">
             <div class="drawer-title">
-              <div class="course-title">{{ selectedCourse.courseName }} ({{ selectedCourse.courseCode }})</div>
+              <div class="course-title">{{ courseChoose.cName }} ({{ courseChoose.cNumber }})</div>
               <div class="course-info">
-                <el-tag size="large" class="tag-title">{{ selectedCourse.credit }}学分</el-tag>
+                <el-tag size="large" class="tag-title">{{ courseChoose.cCredit }}学分</el-tag>
                 <!-- <span class="course-label">课程编号:</span>
                 <span class="course-content">{{ selectedCourse.courseCode }}</span> -->
               </div>
             </div>
             <el-divider />
-            <el-table :data="selectedCourse.courseSection" stripe>
-              <el-table-column prop="class" label="课程班号" />
-              <el-table-column prop="teacher" label="教师" />
-              <el-table-column label="已选/ 容量">
-                <template #default="scope"> {{ scope.row.selected }} / {{ scope.row.capacity }} </template>
+            <el-table :data="courseDetail" stripe>
+              <el-table-column prop="tcNumber" label="课程班号" />
+              <el-table-column prop="teachers" label="教师" />
+              <el-table-column prop="tcRoom" label="教室" />
+              <el-table-column prop="tcStartweek" label="上课起始周次" />
+              <el-table-column prop="tcEndweek" label="上课终止周次" />
+              <el-table-column prop="tcStarttime" label="上课起始时间（节）" />
+              <el-table-column prop="tcEndtime" label="上课终止时间（节）" />
+              <el-table-column fixed="right" label="已选/ 容量">
+                <template #default="scope"> {{ scope.row.selectedNumber }} / {{ scope.row.tcCapacity }} </template>
               </el-table-column>
-              <el-table-column label="操作">
+              <el-table-column fixed="right" label="操作">
                 <template v-slot="scope">
                   <el-button
-                    :disabled="scope.row.selected >= scope.row.capacity"
+                    v-if="scope.row.canSelected"
+                    :disabled="scope.row.selectedNumber >= scope.row.capacity"
                     type="primary"
                     size="small"
                     @click="enrollCourse(scope.row)"
                   >
                     选课
                   </el-button>
+                  <el-button v-else :disabled="true" type="warning" size="small"> 已选 </el-button>
+                  <el-button v-else type="danger" size="small" @click="withdrawCourse(scope.row)"> 退选 </el-button>
                 </template>
               </el-table-column>
             </el-table>
           </el-drawer>
-          <el-table :data="courseList" stripe>
-            <el-table-column prop="courseName" label="课程名称">
+          <el-table :data="courseData" stripe>
+            <el-table-column prop="cName" label="课程名称">
               <template #default="scope">
-                <el-link @click="selectCourse(scope.$index)" target="_blank">{{ scope.row.courseName }}</el-link>
+                <el-link @click="showCourseDetail(scope.row)" target="_blank">{{ scope.row.cName }}</el-link>
               </template>
             </el-table-column>
-            <el-table-column prop="status" label="课程性质">
+            <el-table-column prop="cType" label="课程性质">
               <template #default="scope">
-                <el-tag v-if="scope.row.type == 1" type="success" effect="plain">选修</el-tag>
+                <el-tag v-if="scope.row.cType == '选修'" type="success" effect="plain">选修</el-tag>
                 <el-tag v-else type="danger" effect="plain">必修</el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="courseCode" label="课程代码" />
-            <el-table-column prop="credit" label="学分" />
-            <el-table-column prop="campus" label="校区" />
-            <el-table-column prop="type" label="课程类别" />
+            <el-table-column prop="cNumber" label="课程代码" />
+            <el-table-column prop="cCredit" label="学分" />
+            <el-table-column prop="cCampus" label="校区" />
+            <el-table-column prop="cNature" label="课程类别" />
             <el-table-column prop="isFulled" label="标记">
-              <template #default="scope">
-                <el-tag v-if="scope.row.status == false" type="success" effect="dark">可选</el-tag>
-                <el-tag v-else type="danger" effect="dark">已选满</el-tag>
-              </template>
+              <!-- <template> -->
+              <el-tag type="success" effect="dark">未选满</el-tag>
+              <!-- <el-tag v-else type="danger" effect="dark">已选满</el-tag> -->
+              <!-- </template> -->
             </el-table-column>
             <!-- <el-table-column label="操作">
               <template v-slot="scope">
@@ -105,169 +112,158 @@
           <h3>✅ 已选课程</h3>
         </div>
         <div class="sidebar-content">
-          <ul>
-            <li v-for="course in selectedCourses" :key="course.courseCode">
-              {{ course.courseName }}
-            </li>
-          </ul>
+          <el-table :data="selectedCourses" stripe>
+            <el-table-column prop="cName" label="课程名称">
+              <template #default="scope">
+                <el-link @click="showCourseDetail(scope.row)" target="_blank">{{ scope.row.cName }}</el-link>
+              </template>
+            </el-table-column>
+            <!-- <el-table-column prop="cType" label="课程性质">
+              <template #default="scope">
+                <el-tag v-if="scope.row.cType == '选修'" type="success" effect="plain">选修</el-tag>
+                <el-tag v-else type="danger" effect="plain">必修</el-tag>
+              </template>
+            </el-table-column> -->
+            <el-table-column prop="cNumber" label="课程代码" />
+            <el-table-column prop="cCredit" label="学分" />
+            <!-- <el-table-column prop="cCampus" label="校区" />
+            <el-table-column prop="cNature" label="课程类别" /> -->
+          </el-table>
         </div>
       </div>
     </div>
   </el-main>
 </template>
 
-<script>
+<script lang="ts">
+import { enrollCourse, getAllCourses, withdrawCourse, getFilteredCourses } from "@/api/course"
+import { te } from "date-fns/locale"
+import { ElMessage } from "element-plus"
 export default {
   data() {
     return {
-      drawer: false,
+      drawerList: false,
       searchForm: {
-        semester: "",
-        courseType: ""
+        courseType: "",
+        courseName: "",
+        courseNumber: ""
       },
-      selectedCourse: {},
-      courseList: [
-        {
-          courseName: "川剧艺术与身段体验",
-          courseCode: "HG00072",
-          credit: 3,
-          campus: "D区",
-          type: "通识教育课程",
-          status: 0,
-          isFulled: false,
-          courseSection: [
-            {
-              class: "034",
-              teacher: "河马",
-              selected: 17,
-              capacity: 31
-            },
-            {
-              class: "035",
-              teacher: "河马",
-              selected: 31,
-              capacity: 31
-            },
-            {
-              class: "031",
-              teacher: "骏马",
-              selected: 1,
-              capacity: 31
-            }
-          ]
-        },
-        {
-          courseName: "计算机科学导论",
-          courseCode: "CS10001",
-          credit: 4,
-          campus: "A区",
-          type: "专业必修课程",
-          status: 1,
-          isFulled: false,
-          courseSection: [
-            {
-              class: "001",
-              teacher: "张三",
-              selected: 25,
-              capacity: 50
-            },
-            {
-              class: "002",
-              teacher: "李四",
-              selected: 15,
-              capacity: 50
-            },
-            {
-              class: "003",
-              teacher: "王五",
-              selected: 30,
-              capacity: 50
-            }
-          ]
-        },
-        {
-          courseName: "英语写作与口语训练",
-          courseCode: "EN20002",
-          credit: 3,
-          campus: "B区",
-          type: "通识教育课程",
-          status: 1,
-          isFulled: false,
-          courseSection: [
-            {
-              class: "021",
-              teacher: "Johnson",
-              selected: 20,
-              capacity: 40
-            },
-            {
-              class: "022",
-              teacher: "Smith",
-              selected: 35,
-              capacity: 40
-            },
-            {
-              class: "023",
-              teacher: "Williams",
-              selected: 10,
-              capacity: 40
-            }
-          ]
-        },
-        {
-          courseName: "艺术史与欣赏",
-          courseCode: "AR30005",
-          credit: 3,
-          campus: "C区",
-          type: "通识教育课程",
-          status: 1,
-          isFulled: false,
-          courseSection: [
-            {
-              class: "041",
-              teacher: "陈老师",
-              selected: 5,
-              capacity: 20
-            },
-            {
-              class: "042",
-              teacher: "杨老师",
-              selected: 18,
-              capacity: 20
-            },
-            {
-              class: "043",
-              teacher: "刘老师",
-              selected: 10,
-              capacity: 20
-            }
-          ]
-        }
-      ]
+      courseChoose: {},
+      courseSelected: {},
+      courseDetail: {},
+      courseSelectedDetail: {},
+      teacherCourseData: [],
+      courseData: [],
+      teacherNames: [],
+      numberOfPeople: [],
+      selectedCourses: [],
+      selectedTcIds: []
     }
   },
+  created() {
+    this.fetchCourses()
+  },
   methods: {
+    fetchCourses() {
+      getAllCourses()
+        .then((data) => {
+          this.courseData = data.data.course
+          this.teacherCourseData = data.data.teacherCourse
+          this.teacherNames = data.teacherNames
+          this.numberOfPeople = data.NumberOfPeople
+          this.selectedCourses = data.selectedCourses
+          this.selectedTcIds = data.selectedTcIds
+          // for (let i = 0; i < this.projectData.length; i++) {
+          //   this.projectData[i].teacherName = this.teacherNames[i]
+          // }
+        })
+        .catch((error: any) => {
+          // 处理错误情况
+          console.log(error)
+        })
+    },
     handleSearch() {
       // 处理查询逻辑
+      const searchParamData = {
+        courseType: this.searchForm.courseType,
+        courseName: this.searchForm.courseName,
+        courseNumber: this.searchForm.courseNumber
+      }
+      // console.log("searchParam")
+      // console.log(searchParam)
+      getFilteredCourses(searchParamData).then((data) => {
+        this.courseData = data.data.course
+        this.teacherCourseData = data.data.teacherCourse
+        this.teacherNames = data.teacherNames
+        this.numberOfPeople = data.NumberOfPeople
+        this.selectedCourses = data.selectedCourses
+        this.selectedTcIds = data.selectedTcIds
+      })
     },
     resetForm() {
-      this.$refs.searchForm.resetFields()
-    },
-    enrollCourse(course) {
-      course.isEnrolled = true
-      this.selectedCourses.push(course)
-    },
-    cancelEnrollment(course) {
-      course.isEnrolled = false
-      const index = this.selectedCourses.findIndex((selectedCourse) => selectedCourse.courseCode === course.courseCode)
-      if (index > -1) {
-        this.selectedCourses.splice(index, 1)
+      this.searchForm = {
+        courseType: "",
+        courseName: "",
+        courseNumber: ""
       }
+      this.fetchCourses()
     },
-    selectCourse(index) {
-      this.drawer = true
-      this.selectedCourse = this.courseList[index]
-      console.log(this.selectedCourse)
+    enrollCourse(row) {
+      const selectedCourseData = {
+        tcId: row.tcId
+      }
+
+      enrollCourse(selectedCourseData)
+        .then((data) => {
+          // 处理成功情况
+        })
+        .catch((error: any) => {
+          // 处理错误情况
+          console.log(error)
+          ElMessage({
+            message: "选课失败",
+            type: "error"
+          })
+        })
+    },
+    withdrawCourse(row) {
+      const selectedCourseData = {
+        tcId: row.tcId
+      }
+      withdrawCourse(selectedCourseData)
+        .then((data) => {
+          // 处理成功情况
+        })
+        .catch((error: any) => {
+          // 处理错误情况
+          console.log(error)
+          ElMessage({
+            message: "退课失败",
+            type: "error"
+          })
+        })
+    },
+    showCourseDetail(row) {
+      this.courseChoose = row
+      this.drawerList = true
+      this.courseDetail = this.teacherCourseData[row.cId]
+      // this.courseDetail.teachers = this.teacherNames[row.cId]
+      for (let i = 0; i < this.courseDetail.length; i++) {
+        this.courseDetail[i].teachers = this.teacherNames[row.cId][i]
+        if (this.numberOfPeople[this.courseDetail[i].tcId] != undefined) {
+          this.courseDetail[i].selectedNumber = this.numberOfPeople[this.courseDetail[i].tcId]
+        } else {
+          this.courseDetail[i].selectedNumber = 0
+        }
+      }
+      // check if the course is selected
+      for (let i = 0; i < this.courseDetail.length; i++) {
+        if (this.selectedTcIds.includes(this.courseDetail[i].tcId)) {
+          this.courseDetail[i].canSelected = false
+        } else {
+          this.courseDetail[i].canSelected = true
+        }
+      }
     }
   }
 }
