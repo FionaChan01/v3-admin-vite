@@ -61,54 +61,6 @@ export const constantRoutes: RouteRecordRaw[] = [
   },
 
   {
-    path: "/scholarship",
-    component: Layout,
-    redirect: "/scholarship/application",
-    name: "scholarship",
-    meta: {
-      title: "奖学金管理",
-      svgIcon: "scholarship",
-      roles: ["student"]
-    },
-    children: [
-      {
-        path: "application",
-        component: () => import("@/views/scholarship/application/index.vue"),
-        redirect: "/scholarship/application/comprehensive-scholarship",
-        name: "application",
-        meta: {
-          title: "奖学金申请"
-        },
-        children: [
-          {
-            path: "comprehensive-scholarship",
-            component: () => import("@/views/scholarship/application/comprehensive-scholarship/index.vue"),
-            name: "comprehensive-scholarship",
-            meta: {
-              title: "综合奖学金"
-            }
-          },
-          {
-            path: "other-scholarship",
-            component: () => import("@/views/scholarship/application/other-scholarship/index.vue"),
-            name: "other-scholarship",
-            meta: {
-              title: "其他奖学金"
-            }
-          }
-        ]
-      },
-      {
-        path: "status",
-        component: () => import("@/views/scholarship/status/index.vue"),
-        name: "status",
-        meta: {
-          title: "状态查询"
-        }
-      }
-    ]
-  },
-  {
     path: "/thesis",
     component: Layout,
     redirect: "/thesis/index",
@@ -123,6 +75,25 @@ export const constantRoutes: RouteRecordRaw[] = [
         meta: {
           title: "论文管理",
           svgIcon: "thesis"
+        }
+      }
+    ]
+  },
+  {
+    path: "/patent",
+    component: Layout,
+    redirect: "/patent/index",
+    meta: {
+      roles: ["student"]
+    },
+    children: [
+      {
+        path: "index",
+        component: () => import("@/views/patent/index.vue"),
+        name: "patent",
+        meta: {
+          title: "专利管理",
+          svgIcon: "patent"
         }
       }
     ]
@@ -190,6 +161,54 @@ export const constantRoutes: RouteRecordRaw[] = [
         meta: {
           title: "考试管理",
           svgIcon: "exam"
+        }
+      }
+    ]
+  },
+  {
+    path: "/scholarship",
+    component: Layout,
+    redirect: "/scholarship/application",
+    name: "scholarship",
+    meta: {
+      title: "奖学金管理",
+      svgIcon: "scholarship",
+      roles: ["student"]
+    },
+    children: [
+      {
+        path: "application",
+        component: () => import("@/views/scholarship/application/index.vue"),
+        redirect: "/scholarship/application/comprehensive-scholarship",
+        name: "application",
+        meta: {
+          title: "奖学金申请"
+        },
+        children: [
+          {
+            path: "comprehensive-scholarship",
+            component: () => import("@/views/scholarship/application/comprehensive-scholarship/index.vue"),
+            name: "comprehensive-scholarship",
+            meta: {
+              title: "综合奖学金"
+            }
+          },
+          {
+            path: "other-scholarship",
+            component: () => import("@/views/scholarship/application/other-scholarship/index.vue"),
+            name: "other-scholarship",
+            meta: {
+              title: "其他奖学金"
+            }
+          }
+        ]
+      },
+      {
+        path: "status",
+        component: () => import("@/views/scholarship/status/index.vue"),
+        name: "status",
+        meta: {
+          title: "状态查询"
         }
       }
     ]

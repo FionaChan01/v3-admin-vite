@@ -216,6 +216,7 @@ export default {
       enrollCourse(selectedCourseData)
         .then((data) => {
           // 处理成功情况
+          this.fetchCourses()
         })
         .catch((error: any) => {
           // 处理错误情况
@@ -233,6 +234,7 @@ export default {
       withdrawCourse(selectedCourseData)
         .then((data) => {
           // 处理成功情况
+          this.fetchCourses()
         })
         .catch((error: any) => {
           // 处理错误情况

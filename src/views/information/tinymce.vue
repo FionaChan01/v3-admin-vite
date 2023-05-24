@@ -2,10 +2,9 @@
   <div>
     <el-main>
       <h2>ℹ️ 信息发布</h2>
-    <editor :init="init" :api-key="apiKey" v-model="content" />
-    <el-button type="info" @click="upload">Submit</el-button>
+      <editor :init="init" :api-key="apiKey" v-model="content" />
+      <el-button type="info" @click="upload">Submit</el-button>
     </el-main>
-
   </div>
 </template>
 
