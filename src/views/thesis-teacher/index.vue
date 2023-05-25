@@ -4,150 +4,168 @@
     <el-main>
       <el-row>
         <el-col :span="24">
-          <h2>论文管理</h2>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="24">
-          <h3>1. 论文审核</h3>
-          <div>
-            <h5>(1) 题目</h5>
-            <el-input v-model="thesisName" placeholder="请输入论文名称" />
-          </div>
-          <div class="mt-4">
-            <h5>(2) 类别</h5>
-            <el-input v-model="thesisPublicationName" placeholder="请输入期刊名/ 会议名" class="input-with-select">
-              <template #prepend>
-                <el-select v-model="thesisCategory" placeholder="选择分类" style="width: 115px">
-                  <el-option label="期刊" value="1" />
-                  <el-option label="会议" value="2" />
-                </el-select>
-              </template>
-            </el-input>
-          </div>
-          <div>
-            <h5>(3) 出版时间</h5>
-            <div class="block">
-              <el-date-picker v-model="thesisPublicationDate" type="date" placeholder="选择日期" />
-            </div>
-          </div>
-          <div>
-            <h5>(4) 通讯作者（以分号间隔）</h5>
-            <div class="block">
-              <el-input v-model="thesisCorrspongdingAuthor" placeholder="请输入通讯作者工号（以分号间隔）" />
-            </div>
-          </div>
-          <div>
-            <h5>(5) 作者</h5>
-            <div class="block">
-              <el-input v-model="thesisAuthors" placeholder="请输入文章作者学号（以分号间隔）" />
-            </div>
-          </div>
-          <div>
-            <h5>(6) 文章链接</h5>
-            <el-input v-model="thesisLink" placeholder="请输入链接地址">
-              <template #prepend>Http://</template>
-            </el-input>
-          </div>
-          <br />
-          <el-row>
-            <el-button type="primary" @click="handleSubmit">
-              提交审核<el-icon class="el-icon--right"><Upload /></el-icon>
-            </el-button>
-          </el-row>
+          <h2>📖 论文审核</h2>
         </el-col>
       </el-row>
 
       <el-row>
         <el-col :span="24">
           <br />
-          <h3>2. 我的论文</h3>
-          <div class="table-wrapper">
-            <el-table :data="thesisTableData" stripe style="width: 100%">
-              <el-table-column fixed prop="tName" label="论文题目" width="150" align="center" />
-              <el-table-column prop="tCategory" label="分类" align="center">
-                <template #default="scope">
-                  <el-tag v-if="scope.row.tCategory == '期刊'" type="info" effect="dark">期刊</el-tag>
-                  <el-tag v-else-if="scope.row.tCategory == '会议'" effect="dark">会议</el-tag>
-                  <el-tag v-else type="warning" effect="dark">出版物</el-tag>
-                </template>
-              </el-table-column>
-              <el-table-column prop="tPublicationName" label="期刊名/ 会议名/ 出版社名" align="center" />
-              <el-table-column prop="tReviewResult" label="审核结果" align="center">
-                <template #default="scope">
-                  <el-tag v-if="scope.row.tReviewResult == '通过'" type="success">通过</el-tag>
-                  <el-tag v-else-if="scope.row.tReviewResult == '进行中'" type="warning">进行中</el-tag>
-                  <el-tag v-else-if="scope.row.tReviewResult == '不通过'" type="danger">不通过</el-tag>
-                  <el-tag v-else>进行中</el-tag>
-                </template>
-              </el-table-column>
-              <el-table-column prop="tPublicationDate" label="出版时间" align="center" />
-              <el-table-column prop="correspondingAuthorId" label="通讯作者" align="center" />
-              <el-table-column prop="authorIds" label="作者（按出版顺序）" align="center" />
-              <el-table-column prop="tLink" label="链接" align="center" />
-            </el-table>
+          <h3>1. 查看学生论文</h3>
+          <div v-for="(papers, name) in thesisAll" :key="name">
+            <h4>{{ name }}</h4>
+            <div class="table-wrapper">
+              <el-table :data="papers.data" stripe style="width: 100%">
+                <!-- 以下是你的列定义 -->
+                <el-table-column fixed prop="tName" label="论文题目" width="150" align="center" />
+                <el-table-column prop="tCategory" label="分类" align="center">
+                  <template #default="scope">
+                    <el-tag v-if="scope.row.tCategory == '期刊'" type="info" effect="dark">期刊</el-tag>
+                    <el-tag v-else-if="scope.row.tCategory == '会议'" effect="dark">会议</el-tag>
+                    <el-tag v-else type="warning" effect="dark">出版物</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="tPublicationName" label="期刊名/ 会议名/ 出版社名" align="center" />
+                <el-table-column prop="tReviewResult" label="审核结果" align="center">
+                  <template #default="scope">
+                    <el-tag v-if="scope.row.tReviewResult == '通过'" type="success">通过</el-tag>
+                    <el-tag v-else-if="scope.row.tReviewResult == '进行中'" type="warning">进行中</el-tag>
+                    <el-tag v-else-if="scope.row.tReviewResult == '不通过'" type="danger">不通过</el-tag>
+                    <el-tag v-else>进行中</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="tPublicationDate" label="出版时间" align="center" />
+                <el-table-column prop="authorIds" label="作者（按出版顺序）" align="center">
+                  <template #default="scope">
+                    {{ papers.authorNameList[scope.$index] }}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="correspondingAuthorId" label="通讯作者" align="center">
+                  <template #default="scope">
+                    {{ papers.corrAuthorList[scope.$index] }}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="tLink" label="链接" align="center" />
+              </el-table>
+            </div>
           </div>
         </el-col>
-      </el-row> </el-main
-  ></el-container>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <br />
+          <h3>2. 审核学生论文</h3>
+          <div v-for="(papers, name) in thesisUnderReview" :key="name">
+            <h4>{{ name }}</h4>
+            <div class="table-wrapper">
+              <el-table :data="papers.data" stripe style="width: 100%">
+                <!-- 以下是你的列定义 -->
+                <el-table-column fixed prop="tName" label="论文题目" width="150" align="center" />
+                <el-table-column prop="tCategory" label="分类" align="center">
+                  <template #default="scope">
+                    <el-tag v-if="scope.row.tCategory == '期刊'" type="info" effect="dark">期刊</el-tag>
+                    <el-tag v-else-if="scope.row.tCategory == '会议'" effect="dark">会议</el-tag>
+                    <el-tag v-else type="warning" effect="dark">出版物</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="tPublicationName" label="期刊名/ 会议名/ 出版社名" align="center" />
+                <el-table-column prop="tReviewResult" label="审核结果" align="center">
+                  <template #default="scope">
+                    <el-tag v-if="scope.row.tReviewResult == '通过'" type="success">通过</el-tag>
+                    <el-tag v-else-if="scope.row.tReviewResult == '进行中'" type="warning">进行中</el-tag>
+                    <el-tag v-else-if="scope.row.tReviewResult == '不通过'" type="danger">不通过</el-tag>
+                    <el-tag v-else>进行中</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="tPublicationDate" label="出版时间" align="center" />
+                <el-table-column prop="authorIds" label="作者（按出版顺序）" align="center">
+                  <template #default="scope">
+                    {{ papers.authorNameList[scope.$index] }}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="correspondingAuthorId" label="通讯作者" align="center">
+                  <template #default="scope">
+                    {{ papers.corrAuthorList[scope.$index] }}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="tLink" label="链接" align="center" />
+                <el-table-column label="操作" align="center">
+                  <template #default="scope">
+                    <el-button
+                      v-if="scope.row.tReviewResult == '进行中'"
+                      round
+                      size="small"
+                      type="success"
+                      @click="approve(scope.row)"
+                      >通过</el-button
+                    >
+                    <el-button
+                      v-if="scope.row.tReviewResult == '进行中'"
+                      round
+                      size="small"
+                      type="danger"
+                      @click="reject(scope.row)"
+                      >不通过</el-button
+                    >
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+    </el-main></el-container
+  >
 </template>
 
 <script lang="ts">
-import { getThesisByStudentId } from "@/api/thesis"
+import { getStudentThesisByTeacherId, approveThesis, rejectThesis } from "@/api/thesis"
 import { format, parseISO } from "date-fns"
-import { submitThesis } from "@/api/thesis"
-
+import { ElMessage } from "element-plus"
 export default {
   methods: {
-    async handleSubmit() {
-      const thesisData = {
-        thesisName: this.thesisName,
-        thesisCategory: this.thesisCategory,
-        thesisPublicationName: this.thesisPublicationName,
-        thesisPublicationDate: this.thesisPublicationDate,
-        thesisCorrspongdingAuthor: this.thesisCorrspongdingAuthor,
-        thesisAuthors: this.thesisAuthors,
-        thesisLink: this.thesisLink,
-        thesisReviewResult: "进行中"
+    approve(paper) {
+      // console.log(paper.tId)
+      const thesisId = {
+        thesisId: paper.tId
       }
-
-      // 检查所有字段是否都不为空
-      for (const key in thesisData) {
-        if (!thesisData[key]) {
-          this.$message({
-            message: this.en2zh[key] + "不能为空！",
-            type: "error"
-          })
-          return
-        }
-      }
-
-      try {
-        const response = await submitThesis(thesisData)
-        console.log("论文成功提交审核", response)
-        // 提交成功的弹窗
-        this.$message({
-          message: "论文成功提交审核！",
-          type: "success"
+      approveThesis(thesisId)
+        .then((data) => {
+          ElMessage.success("审核通过")
+          this.fetchThesis()
         })
-        this.fetchThesis()
-      } catch (error) {
-        console.error("论文提交审核出错", error)
+        .catch((error: any) => {
+          // 处理错误情况
+          console.log(error)
+        })
+    },
+
+    reject(paper) {
+      const thesisId = {
+        thesisId: paper.tId
       }
+      rejectThesis(thesisId)
+        .then((data) => {
+          ElMessage.success("审核不通过")
+          this.fetchThesis()
+        })
+        .catch((error: any) => {
+          // 处理错误情况
+          console.log(error)
+        })
+    },
+    formatDate(date) {
+      // 使用 date-fns 的 format 函数调整日期格式
+      return format(parseISO(date), "yyyy-MM-dd")
     },
     fetchThesis() {
-      getThesisByStudentId()
+      getStudentThesisByTeacherId()
         .then((data) => {
-          this.thesisTableData = data.data
-          //traverse thesisTableData
-          for (let i = 0; i < this.thesisTableData.length; i++) {
-            this.thesisTableData[i].tPublicationDate = format(
-              parseISO(this.thesisTableData[i].tPublicationDate),
-              "yyyy-MM-dd"
-            )
-            this.thesisTableData[i].authorIds = data.authorNameList[i]
-            this.thesisTableData[i].correspondingAuthorId = data.corrAuthorList[i]
+          this.thesisAll = data.data
+          for (const papers of Object.values(this.thesisAll)) {
+            for (const paper of papers.data) {
+              paper.tPublicationDate = this.formatDate(paper.tPublicationDate)
+            }
           }
         })
         .catch((error: any) => {
@@ -159,18 +177,21 @@ export default {
   created() {
     this.fetchThesis()
   },
+  computed: {
+    thesisUnderReview() {
+      const result = {}
+      for (const [name, papers] of Object.entries(this.thesisAll)) {
+        result[name] = {
+          ...papers,
+          data: papers.data.filter((paper) => paper.tReviewResult == "进行中")
+        }
+      }
+      return result
+    }
+  },
+
   data() {
     return {
-      en2zh: {
-        thesisName: "论文题目",
-        thesisCategory: "类别",
-        thesisPublicationName: "出版物名",
-        thesisPublicationDate: "出版时间",
-        thesisCorrspongdingAuthor: "通讯作者",
-        thesisAuthors: "论文作者",
-        thesisLink: "论文链接"
-      },
-      studentId: 2019194178,
       thesisName: "",
       thesisCategory: "",
       thesisPublicationName: "",
@@ -178,7 +199,7 @@ export default {
       thesisCorrspongdingAuthor: "",
       thesisAuthors: "",
       thesisLink: "",
-      thesisTableData: []
+      thesisAll: []
     }
   }
 }
