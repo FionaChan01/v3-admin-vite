@@ -8,3 +8,11 @@ export function submit(data: Info.ISubmitRequestData) {
     data
   })
 }
+
+export function gpt(data) {
+  return request({
+    url: "information/gpt",
+    method: "post",
+    data
+  })
+}

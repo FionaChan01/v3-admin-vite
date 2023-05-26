@@ -3,7 +3,8 @@
     <el-main>
       <h2>ℹ️ 信息发布</h2>
       <editor :init="init" :api-key="apiKey" v-model="content" />
-      <el-button type="info" @click="upload">Submit</el-button>
+      <el-button type="info" @click="generateTitle">GPT generate title</el-button>
+      <!-- <el-button type="info" @click="upload">Submit</el-button> -->
     </el-main>
   </div>
 </template>
@@ -13,7 +14,7 @@ import { ref } from "vue"
 import axios from "axios"
 import { defineComponent } from "vue"
 import Editor from "@/components/editor/index"
-import { submit } from "@/api/information"
+import { submit, gpt } from "@/api/information"
 import { getToken } from "@/utils/cache/cookies"
 const apiKey = "1kf68b8jnzsbtaxh2p1ek44moofujp4q78k51lx9x9svgq4c"
 const content = ref('<h2 style="text-align: center;">在此编辑内容...</h2>')
@@ -33,6 +34,18 @@ export default defineComponent({
     this.generateText()
   },
   methods: {
+    generateTitle() {
+      const prompts = {
+        userPrompt: "||" + this.content + "||",
+        systemPrompt: "给这篇文章一个标题，文章用||间隔，文章是HTML格式的；并根据文章主题分配一个tag，tag类型有：学术前沿、创新创业、国际交流、招聘就业、校园生活。以JSON格式返回，包括以下键：tag, title"
+      }
+      console.log(prompts)
+      gpt(prompts).then((res) => {
+        console.log(res)
+        // prompt.value = res.data.choices[0].text.trim()
+        // this.generateText()
+      })
+    },
     async generateText() {
       const res = await axios.post(
         "https://api.openai.com/v1/chat/completions",

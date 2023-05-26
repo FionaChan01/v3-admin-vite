@@ -117,6 +117,25 @@ export const constantRoutes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: "/patent-teacher",
+    component: Layout,
+    redirect: "/patent-teacher/index",
+    meta: {
+      roles: ["teacher"]
+    },
+    children: [
+      {
+        path: "index",
+        component: () => import("@/views/patent-teacher/index.vue"),
+        name: "patent-teacher",
+        meta: {
+          title: "专利审核",
+          svgIcon: "patent"
+        }
+      }
+    ]
+  },
+  {
     path: "/projects",
     component: Layout,
     redirect: "/projects/all",
