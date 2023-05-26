@@ -89,7 +89,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       {
         path: "index",
         component: () => import("@/views/thesis-teacher/index.vue"),
-        name: "thesis",
+        name: "thesis-teacher",
         meta: {
           title: "论文审核",
           svgIcon: "thesis"
@@ -210,7 +210,8 @@ export const constantRoutes: RouteRecordRaw[] = [
     meta: {
       title: "奖学金管理",
       svgIcon: "scholarship",
-      roles: ["student"]
+      roles: ["student"],
+      hidden: true
     },
     children: [
       {
