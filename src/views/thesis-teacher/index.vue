@@ -16,7 +16,7 @@
             <h4>{{ name }}</h4>
             <div class="table-wrapper">
               <el-table :data="papers.data" stripe style="width: 100%">
-                <!-- 以下是你的列定义 -->
+
                 <el-table-column fixed prop="tName" label="论文题目" width="150" align="center" />
                 <el-table-column prop="tCategory" label="分类" align="center">
                   <template #default="scope">
@@ -59,7 +59,6 @@
             <h4>{{ name }}</h4>
             <div class="table-wrapper">
               <el-table :data="papers.data" stripe style="width: 100%">
-                <!-- 以下是你的列定义 -->
                 <el-table-column fixed prop="tName" label="论文题目" width="150" align="center" />
                 <el-table-column prop="tCategory" label="分类" align="center">
                   <template #default="scope">

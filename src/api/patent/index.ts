@@ -14,3 +14,26 @@ export function submitPatent(data: any) {
     data
   })
 }
+
+export function getStudentPatentByTeacherId() {
+  return request({
+    url: "patent/getStudentPatentByTeacherId",
+    method: "get"
+  })
+}
+
+export function approvePatent(data) {
+  return request({
+    url: "patent/approvePatent",
+    method: "post",
+    data
+  })
+}
+
+export function rejectPatent(data) {
+  return request({
+    url: "patent/rejectPatent",
+    method: "post",
+    data
+  })
+}
